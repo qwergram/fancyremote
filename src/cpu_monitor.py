@@ -18,20 +18,27 @@ class cpu_monitor(object):
 	def read_proc(self):
 		with io.open(self.cpu_proc) as f:
 			stats = f.readlines()
-		self.history.append(self.proc_parser(stats))
+		self.record_proc(stats)
 
 	def main(self):
 		for time in range(times):
 			self.read_proc()
 			time.sleep(self.interval)
 
-	def proc_parser(self, contents):
+	def record_proc(self, contents):
+		json = []
 		for line in contents:
 			line = line.strip()
 			if line.startswith('cpu '): # Since there's only one core, we only need to check the average
 				cpu, user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice = [lazy_int(string) for string in line.split()]
 				json = [user, system, idle]
-
+				break
+		else:
+			raise IOError("Invalid Procfile")
+		if self.last:
+			this_cycle_cpu_usage = ((json[0] - self.last[0]) + (json[1] - self.last[1])) / ((json[0] - self.last[0]) + (json[1] - self.last[1]) + (json[2] - self.last[2]))
+			self.history.append(this_cycle_cpu_usage)
+		self.last = json
 
 def lazy_int(value):
 	try:
