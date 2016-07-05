@@ -1,5 +1,7 @@
 # fancyremote
-A python powered monitor for any azure or remote computer
+  A python powered monitor for any azure or remote computer
+  
+  Coded with love by Norton Pengra
 
 # Setup with your remote computer
 Decide what port what you're going to use to connect to this remote terminal. By default the terminal uses port `8080`
