@@ -7,21 +7,30 @@ import io
 
 class cpu_monitor(object):
 
-	def __init__(self, proc_file="/proc/stat", interval=1):
+	def __init__(self, proc_file="/proc/stat", interval=1, times=100):
 		self.cpu_proc = proc_file
 		self.interval = interval
+		self.times = times
 		self.svg = ""
-		self.history = []
+		self.last = []
+		self.history = [] # convert these numbers to percentages.
 
 	def read_proc(self):
 		with io.open(self.cpu_proc) as f:
 			stats = f.readlines()
-		self.history.append(proc_parser(stats))
+		self.history.append(self.proc_parser(stats))
 
 	def main(self):
-		while True:
+		for time in range(times):
 			self.read_proc()
 			time.sleep(self.interval)
+
+	def proc_parser(self, contents):
+		for line in contents:
+			line = line.strip()
+			if line.startswith('cpu '): # Since there's only one core, we only need to check the average
+				cpu, user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice = [lazy_int(string) for string in line.split()]
+				json = [user, system, idle]
 
 
 def lazy_int(value):
@@ -32,22 +41,10 @@ def lazy_int(value):
 
 
 
-def proc_parser(contents):
-	json = {'intr': {}}
-	for line in contents:
-		line = line.strip()
-		if line.startswith('cpu '): # Since there's only one core, we only need to check the average
-			cpu, user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice = [lazy_int(string) for string in line.split()]
-			json['cpu'] = {'user': user, 'nice': nice, 'system': system, 'idle': idle, 'iowait': iowait, 'irq': irq, 'softirq': softirq, 'steal': steal, 'guest': guest, 'guest_nice': guest_nice}
-		if line.startswith('intr'):
-			for i, interrupt in enumerate(line.split()[1:]):
-				if interrupt != '0':
-					json['intr'][i] = int(interrupt)
-
-	return json
-
 
 if __name__ == "__main__":
 	C = cpu_monitor()
 	C.read_proc()
-	print(C.history[0])
+	C.read_proc()
+	C.read_proc()
+	print(C.history)
