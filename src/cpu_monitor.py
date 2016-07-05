@@ -1,5 +1,5 @@
 AUTHOR = "Norton Pengra"
-VERSION = 0.0
+VERSION = 0.1
 DATE_CREATED = "July 5th, 2016"
 
 import time
@@ -13,7 +13,7 @@ class cpu_monitor(object):
 		self.times = times
 		self.svg = ""
 		self.last = []
-		self.current_usage = 0
+		self.total_usage = 0
 		self.history = [] # convert these numbers to percentages.
 
 	def read_proc(self):
@@ -25,7 +25,7 @@ class cpu_monitor(object):
 		for t in range(self.times):
 			self.read_proc()
 			time.sleep(self.interval)
-			print(self.current_usage)
+			print(self.history[-1:])
 
 	def record_proc(self, contents):
 		json = []
@@ -38,18 +38,20 @@ class cpu_monitor(object):
 		else:
 			raise IOError("Invalid Procfile")
 		if self.last:
-			this_cycle_cpu_usage = ((json[0] - self.last[0]) + (json[1] - self.last[1])) / ((json[0] - self.last[0]) + (json[1] - self.last[1]) + (json[2] - self.last[2]))
-			self.history.append(this_cycle_cpu_usage)
-			self.current_usage += this_cycle_cpu_usage
+			try:
+				this_cycle_cpu_usage = ((json[0] - self.last[0]) + (json[1] - self.last[1])) / ((json[0] - self.last[0]) + (json[1] - self.last[1]) + (json[2] - self.last[2]))
+			except ZeroDivisionError:
+				this_cycle_cpu_usage = 0
+			self.history.append(this_cycle_cpu_usage * 100)
+			self.total_usage += this_cycle_cpu_usage
 		self.last = json
+
 
 def lazy_int(value):
 	try:
 		return int(value)
 	except ValueError:
 		return value
-
-
 
 
 if __name__ == "__main__":
