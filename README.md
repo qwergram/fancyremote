@@ -15,7 +15,7 @@ The simplest way to launch the server is to:
 ```
 git clone https://github.com/qwergram/fancyremote.git
 cd fancyremote
-sudo ./LAUNCH_SERVER.sh
+[sudo] ./LAUNCH_SERVER.sh
 ```
 (sudo is required if you're accessing root locations)
 
@@ -30,8 +30,8 @@ LAUNCH_SERVER.bat
 Finally, use your favorite browser and point it to the ip address of your computer.
 
 # Files
-## src/fancy_remote.py
+## `src/fancy_remote.py`
 This is the remote file browser you are able to use to view and download files on your hard drive.
 
-## src/cpu_monitor.py
+## `src/cpu_monitor.py`
 This file monitors by default `/proc/stat` for cpu stats, and creates an SVG every second.
