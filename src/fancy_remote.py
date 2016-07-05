@@ -1,10 +1,11 @@
 import http.server
-
+import os
 
 AUTHOR = "Norton Pengra"
 DATE_CREATED = "July 5, 2016"
 VERSION = 0.0
 
+os.chdir('/')
 
 class BootstrapFileNav(http.server.SimpleHTTPRequestHandler):
 
