@@ -54,12 +54,22 @@ class BootstrapFileNav(http.server.SimpleHTTPRequestHandler):
 				float: left;
 			}
 			header {
-				background: #000;
+				background: #232323;
 				color: #fff;
 				text-align: center;
 				padding-top: 5px;
 				padding-bottom: 5px;
 				margin-bottom: 20px;
+			}
+			footer {
+				position: fixed;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				height: 50px;
+				background: #232323;
+				color: #fff;
+				text-align: center;
 			}
 			</style>
 		""")
@@ -88,6 +98,28 @@ class BootstrapFileNav(http.server.SimpleHTTPRequestHandler):
 			r.append('</div></a>')
 
 		r.append('</div>')
+		r.append('<footer>')
+		report = []
+		with io.open('/proc/stat') as f: #  cat /proc/net/netstat
+			for line in f.readlines():
+				if line.startswith('cpu'):
+					_, user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice = line.strip().split()
+					report.append({
+						"cpu": _,
+						"user": int(user),
+						"nice": int(nice),
+						"sys": int(system),
+						"idle": int(idle),
+						"iowait": int(iowait),
+						"irq": sum({int(irq), int(softirq)}),
+						"steal": int(steal),
+						"guest": sum({int(guest), int(guest_nice)})
+
+					})
+				else:
+					break
+		r.append(" | ".join([str(cpu_dict) for cpu_dict in report]))
+		r.append('</footer>')
 		r.append('</body></html')
 
 		encoded = "\n".join(r).encode(enc, 'surrogateescape')
