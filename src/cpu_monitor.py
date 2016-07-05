@@ -4,6 +4,8 @@ DATE_CREATED = "July 5th, 2016"
 
 import time
 import io
+import bottle
+import _thread
 
 class cpu_monitor(object):
 
@@ -53,8 +55,22 @@ def lazy_int(value):
 	except ValueError:
 		return value
 
-
 if __name__ == "__main__":
-	C = cpu_monitor()
-	C.run()
-	print(C.history)
+
+	C = cpu_monitor(times=1000000000)
+
+
+	def launch_cpu_monitor():
+		C.run()
+
+
+	@bottle.route('/')
+	def hello():
+		try:
+			return str(C.history[-1])
+		except KeyError:
+			return '0'
+
+
+	_thread.start_new_thread(launch_cpu_monitor, ())
+	bottle.run(host='0.0.0.0', port=8080, debug=True)
