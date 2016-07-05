@@ -4,6 +4,7 @@ import urllib.parse
 import html
 import sys
 import io
+import subprocess
 
 AUTHOR = "Norton Pengra"
 DATE_CREATED = "July 5, 2016"
@@ -99,28 +100,9 @@ class BootstrapFileNav(http.server.SimpleHTTPRequestHandler):
 
 		r.append('</div>')
 		r.append('<footer>')
-		report = []
-		with io.open('/proc/stat') as f: #  cat /proc/net/netstat
-			for line in f.readlines():
-				if line.startswith('cpu'):
-					cpu_usage = sum([int(usage) for usage in line.strip().split()][1:])
-					#_, user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice = line.strip().split()
-					"""report.append("cpu: {cpu}".format(**{
-						"cpu": _,
-						"user": int(user),
-						"nice": int(nice),
-						"sys": int(system),
-						"idle": int(idle),
-						"iowait": int(iowait),
-						"irq": sum({int(irq), int(softirq)}),
-						"steal": int(steal),
-						"guest": sum({int(guest), int(guest_nice)})
-
-					}))"""
-					report.append(cpu_usage)
-				else:
-					break
-		r.append(" | ".join([str(cpu_dict) for cpu_dict in report]))
+		# with io.open('/proc/stat') as f: #  cat /proc/net/netstat
+		# x = subprocess.check_output("echo hello world!")
+		# r.append('CPU Usage: {:.2f}%'.format((report[0]/report[1])*100))
 		r.append('</footer>')
 		r.append('</body></html')
 
