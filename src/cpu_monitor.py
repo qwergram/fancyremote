@@ -24,6 +24,12 @@ class cpu_monitor(object):
 			time.sleep(self.interval)
 
 
+def lazy_int(value):
+	try:
+		return int(value)
+	except ValueError:
+		return value
+
 
 
 def proc_parser(contents):
@@ -31,7 +37,7 @@ def proc_parser(contents):
 	for line in contents:
 		line = line.strip()
 		if line.startswith('cpu '): # Since there's only one core, we only need to check the average
-			cpu, user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice = [int(string) for string in line.split()]
+			cpu, user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice = [lazy_int(string) for string in line.split()]
 			json['cpu'] = {'user': user, 'nice': nice, 'system': system, 'idle': idle, 'iowait': iowait, 'irq': irq, 'softirq': softirq, 'steal': steal, 'guest': guest, 'guest_nice': guest_nice}
 		if line.startswith('intr'):
 			for i, interrupt in enumerate(line.split()[1:]):
