@@ -13,6 +13,7 @@ class cpu_monitor(object):
 		self.times = times
 		self.svg = ""
 		self.last = []
+		self.current_usage = 0
 		self.history = [] # convert these numbers to percentages.
 
 	def read_proc(self):
@@ -20,10 +21,11 @@ class cpu_monitor(object):
 			stats = f.readlines()
 		self.record_proc(stats)
 
-	def main(self):
-		for time in range(times):
+	def run(self):
+		for t in range(self.times):
 			self.read_proc()
 			time.sleep(self.interval)
+			print(self.current_usage)
 
 	def record_proc(self, contents):
 		json = []
@@ -38,6 +40,7 @@ class cpu_monitor(object):
 		if self.last:
 			this_cycle_cpu_usage = ((json[0] - self.last[0]) + (json[1] - self.last[1])) / ((json[0] - self.last[0]) + (json[1] - self.last[1]) + (json[2] - self.last[2]))
 			self.history.append(this_cycle_cpu_usage)
+			self.current_usage += this_cycle_cpu_usage
 		self.last = json
 
 def lazy_int(value):
@@ -51,7 +54,5 @@ def lazy_int(value):
 
 if __name__ == "__main__":
 	C = cpu_monitor()
-	C.read_proc()
-	C.read_proc()
-	C.read_proc()
+	C.run()
 	print(C.history)
