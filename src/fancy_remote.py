@@ -103,8 +103,9 @@ class BootstrapFileNav(http.server.SimpleHTTPRequestHandler):
 		with io.open('/proc/stat') as f: #  cat /proc/net/netstat
 			for line in f.readlines():
 				if line.startswith('cpu'):
-					_, user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice = line.strip().split()
-					report.append({
+					cpu_usage = sum([int(usage) for usage in line.strip().split()][1:])
+					#_, user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice = line.strip().split()
+					"""report.append("cpu: {cpu}".format(**{
 						"cpu": _,
 						"user": int(user),
 						"nice": int(nice),
@@ -115,7 +116,8 @@ class BootstrapFileNav(http.server.SimpleHTTPRequestHandler):
 						"steal": int(steal),
 						"guest": sum({int(guest), int(guest_nice)})
 
-					})
+					}))"""
+					report.append(cpu_usage)
 				else:
 					break
 		r.append(" | ".join([str(cpu_dict) for cpu_dict in report]))
