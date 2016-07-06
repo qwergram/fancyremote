@@ -12,7 +12,6 @@ You do not have to do this step if you use a tool like hamachi.
 # Launch the Remote
 The simplest way to launch the server is to:
 
-## Unix:
 ```
 git clone https://github.com/qwergram/fancyremote.git
 cd fancyremote
@@ -21,23 +20,11 @@ pip install -r requirements.txt
 ```
 (sudo is required if you're accessing root locations)
 
-## Windows:
-```
-git clone https://github.com/qwergram/fancyremote.git
-cd fancyremote
-pip install -r requirements.txt
-LAUNCH_SERVER.bat
-```
-(run as admin if you're accessing root locations)
-
 Finally, use your favorite browser and point it to the ip address of your computer.
 
 # Files
 ## `./LAUNCH_SERVER.sh`
-Run this to execute the server in the background. (Unix)
-
-## `./LAUNCH_SERVER.bat`
-Run this to execute the server in the background. (Windows)
+Run this to execute the server in the background.
 
 ## `src/fancy_remote.py`
 This is the remote file browser you are able to use to view and download files on your hard drive.
