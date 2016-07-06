@@ -33,6 +33,8 @@ class BootstrapFileNav(http.server.SimpleHTTPRequestHandler):
 		title = "Directory listing for {}".format(displaypath)
 		r.append('<!DOCTYPE html')
 		r.append('<html>\n<head>')
+		r.append('<script src="https://cdnjs.cloudflare.com/ajax/libs/smoothie/1.27.0/smoothie.min.js"></script>')
+		r.append('<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>')
 		r.append("""
 			<style>
 			html, body {
@@ -100,6 +102,24 @@ class BootstrapFileNav(http.server.SimpleHTTPRequestHandler):
 
 		r.append('</div>')
 		r.append('<footer>')
+		r.append("""
+
+			<canvas id="cpu_monitor" width="500px" height="50px"></canvas>
+			<script>
+var smoothie = new SmoothieChart();
+smoothie.streamTo(document.getElementById("cpu_monitor"), 1000);
+var response = '';
+var line1 = new TimeSeries();
+setInterval(function() {
+	$.ajax({url: "http://104.42.237.150:8081/", complete: function(r) {response = r.responseText}})
+	line1.append(new Date().getTime(), parseFloat(response));
+}, 1000);
+
+smoothie.addTimeSeries(line1);
+
+			</script>
+
+		""")
 		# with io.open('/proc/stat') as f: #  cat /proc/net/netstat
 		# x = subprocess.check_output("echo hello world!")
 		# r.append('CPU Usage: {:.2f}%'.format((report[0]/report[1])*100))

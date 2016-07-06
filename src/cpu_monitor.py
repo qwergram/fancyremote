@@ -59,12 +59,19 @@ if __name__ == "__main__":
 
 	C = cpu_monitor(times=1000000000)
 
-
 	def launch_cpu_monitor():
 		C.run()
 
 
+	def allow_cors(func):
+		def wrapper(*args, **kwargs):
+			bottle.response.headers['Access-Control-Allow-Origin'] = '*'
+			return func(*args, **kwargs)
+		return wrapper
+
+
 	@bottle.route('/')
+	@allow_cors
 	def hello():
 		try:
 			return str(C.history[-1])
@@ -73,4 +80,4 @@ if __name__ == "__main__":
 
 
 	_thread.start_new_thread(launch_cpu_monitor, ())
-	bottle.run(host='0.0.0.0', port=8080, debug=True)
+	bottle.run(host='0.0.0.0', port=8081, debug=True)
