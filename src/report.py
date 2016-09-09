@@ -103,7 +103,7 @@ body, html {
 </body>
 <figure>
   <figcaption>
-    Percentage of world population by continent
+    Test pass results
   </figcaption>
   
   <div class="buttons"></div>
