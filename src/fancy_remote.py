@@ -42,6 +42,10 @@ class BootstrapFileNav(http.server.SimpleHTTPRequestHandler):
                 color: #232323;
                 font-family: Verdana;
             }
+            div.report {
+                width: 80%;
+                margin: auto;
+            }
             div.files {
                 width: 80%;
                 margin: auto;
@@ -78,6 +82,10 @@ class BootstrapFileNav(http.server.SimpleHTTPRequestHandler):
         r.append('</head>')
         r.append('<body>')
         r.append('<header>{}</header>'.format(title))
+
+        r.append('<div class="report">')
+
+        r.append('</div>')
         r.append('<div class="files">')
         for name in list:
             fullname = os.path.join(path, name)
