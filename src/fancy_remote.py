@@ -84,6 +84,7 @@ class BootstrapFileNav(http.server.SimpleHTTPRequestHandler):
         r.append('<header>{}</header>'.format(title))
 
         r.append('<div class="report">')
+        
 
         r.append('</div>')
         r.append('<div class="files">')
