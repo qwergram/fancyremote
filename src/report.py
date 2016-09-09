@@ -5,7 +5,7 @@ HISTORY = {}
 
 @bottle.get('/report/<id_>/<report>/')
 def update_report(id_, report):
-    HISTORY.setdefault(id_, {}).setdefault(report, 0)
+    HISTORY.setdefault(id_, {"pass": 0, "fail": 0}).setdefault(report, 0)
     HISTORY[id_][report] += 1
     return "ok"
 
@@ -98,20 +98,28 @@ body, html {
   height: 100%;
 }
 </style>
+
+</head>
+</body>
+<figure>
+  <figcaption>
+    Percentage of world population by continent
+  </figcaption>
+  
+  <div class="buttons"></div>
+  <svg width="100" height="100" class="chart">
+    <circle r="25" cx="50" cy="50" class="pie"/>
+  </svg>
+
+</figure>
+
 <script>
 var total = 158,
     buttons = document.querySelector('.buttons'),
     pie = document.querySelector('.pie'),
     activeClass = 'active';
 
-var continents = {
-  asia: 60,
-  northAmerica : 5,
-  southAmerica: 9,
-  oceania: 1,
-  africa: 15,
-  europe: 12
-};
+var continents = {""" + ",\n".join(["{}: {}".format(key, int((value['pass'] * 100) / (value['pass'] + value['fail']))) for key, value in HISTORY.items()]) + """};
 
 // work out percentage as a result of total
 var numberFixer = function(num){
@@ -154,21 +162,10 @@ var setActiveClass = function(el) {
 }
 
 // Set up default settings
-setPieChart('asia');
-setActiveClass(buttons.children[0]);
+//setPieChart('asia');
+//setActiveClass(buttons.children[0]);
 </script>
-</head>
-</body>
-<figure>
-  <figcaption>
-    Percentage of world population by continent
-  </figcaption>
-  
-  <div class="buttons"></div>
-  <svg width="100" height="100" class="chart">
-    <circle r="25" cx="50" cy="50" class="pie"/>
-  </svg>
-</figure>
+
 </body>
 </html>
     
