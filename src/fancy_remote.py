@@ -4,7 +4,6 @@ import urllib.parse
 import html
 import sys
 import io
-import subprocess
 
 AUTHOR = "Norton Pengra"
 DATE_CREATED = "July 5, 2016"
